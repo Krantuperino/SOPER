@@ -120,7 +120,7 @@ void  showAllFiles () {
       /*El primer argumento es el path donde se encuentra lo que vamos a ejecutar*/
       /*El segundo y demás lo siguiente que vamos a ejecutar*/
       /*El ultimo debe ser NULL*/
-      execlp("/bin/ls", "ls", "-l", (char *)NULL);
+      execlp("ls", "ls", "-l", (char *)NULL);
       exit(EXIT_SUCCESS);
 		}
     /*Si es el padre esperamos al proceso hijo*/
