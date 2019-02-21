@@ -1,96 +1,115 @@
 /*
- * Ejemplo de codigo que genera un numero aleatorio y lo muestra por pantalla
+ * Ejemplo de codigo que genera un numero aleatorio
+	y lo muestra por pantalla
  */
+ #include <sys/types.h>
+ #include <sys/wait.h>
+ #include <unistd.h>
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <sys/wait.h>
-#include <time.h>
+
+ #include <time.h>
+ #include <stdlib.h>
+ #include <stdio.h>
 
 int main(int argc, char *argv[]) {
-
-	pid_t pid, pid1;
-	int *r, *hello, flag;
-	int fd[2], fd1[2];
-
- /* Inicializa el generador con una semilla cualquiera, OJO! este metodo solo
-	se llama una vez */
-	printf("Wut");
+	/* Inicializa el generador con una semilla cualquiera, OJO! este metodo solo
+	 se llama una vez */
 	srand(time(NULL));
 	/* Devuelve un numero aleatorio en 0 y MAX_RAND(un número alto que varia
 	 segun el sistema) */
+	int fd_1[2],fd_2[2];
+	int nbytes, pipe_status;
+	pid_t pid_1, pid_2;
+	int r;
+	int padre, hijo_final;
 
-	flag = pipe(fd);
-	if(flag == -1)
-		printf("Well, shit");
-	flag = pipe(fd1);
-	if(flag == -1)
-		printf("Well, shit again");
-
-	pid = fork();
-
-
-	if(pid < 0){
-		printf("Oopsie");
+	/*Creamos la pipe*/
+	pipe_status=pipe(fd_1);
+	if(pipe_status == -1) {
+		perror("Error creando la tuberia\n");
 		exit(EXIT_FAILURE);
-	} 
-	else if(pid == 0){
-		
-		close(fd[0]);
-		*r = rand();
+	}
 
-		printf("Imma send this: %d", *r);
-		flag = write(fd[1], &r, sizeof(int));
+	pipe_status=pipe(fd_2);
+	if(pipe_status == -1) {
+		perror("Error creando la tuberia\n");
+		exit(EXIT_FAILURE);
+	}
 
-		if(flag == 0)
-			printf("Not written well 0");
+	/*Creamos el primer hijo*/
+	pid_1 = fork();
+	/*Control de errores*/
+	if (pid_1 <  0  )
+	{
+		printf("Error al emplear fork\n");
+		exit (EXIT_FAILURE);
+	}
 
-		printf("Ive sent this: %d", *r);
+	/*Si es el hijo creamos el aleatorio y lo enviamos*/
+	else  if(pid_1 ==  0)
+	{
+		r = rand();
+		close(fd_1[0]);
 
+		write(fd_1[1], (int*)&r, sizeof(int));
 		exit(EXIT_SUCCESS);
-	} 
-	else if (pid > 0){
-		pid1 = fork();
+	}
+	/*Si es el padre: */
+	/*1.- Recibimos el numero aleatorio*/
+	/*2.- Creamos otro hijo*/
+	/*3.- Le enviamos al hijo el numero aleatorio*/
+	else
+	{
+		/*Esperamos al hijo*/
+		wait(NULL);
 
-		if(pid1 < 0){
-			exit(EXIT_FAILURE);
-		} 
-		else if(pid1 == 0){
-			close(fd1[1]);
+		/*1*/
+		close(fd_1[1]);
 
-			flag = read(fd1[0], &hello, sizeof(int));
-			
-			if(flag == 0)
-				printf("Not read well 1");
-
-			printf("My daddy gave me this: %d\n", *hello);
-
-			exit(EXIT_SUCCESS);
-		} 
-		else if (pid1 > 0){
-			close(fd[1]);
-
-			flag = read(fd[0], &hello, sizeof(int));
-
-			if(flag == 0)
-				printf("Not read well 0");
-
-			close(fd1[0]);
-
-			printf("OwO %d\n", *hello);
-
-			flag = write(fd1[1], &hello, sizeof(int));
-
-			if(flag == 0)
-				printf("Not written well 1");
-		}
+		read(fd_1[0], &padre, sizeof(int));
 		
+		/*Ahora ya tenemos el numero almacenado donde el padre*/
+		/*2*/
+
+		pid_2 = fork();
+		if (pid_2 <  0)
+		{
+			printf("Error al emplear fork para el segundo hijo\n");
+			exit (EXIT_FAILURE);
+		}
+		else  if(pid_2 > 0)
+		{
+			 /*Enviamos el numero*/
+			close(fd_2[0]);
+			write(fd_2[1], (int*)&padre, sizeof(int));
+			wait(NULL);
+			exit(EXIT_SUCCESS);
+		}
+		else
+		{
+			/*Recibimos el numero*/
+			close(fd_2[1]);
+
+			read(fd_2[0], &hijo_final, sizeof(int));
+			
+			printf("El valor del numero aleatorio es: %d\n",hijo_final);
+			exit(EXIT_SUCCESS);
+		}
 
 	}
 
-	wait(NULL);
+
+
+
+
+
+
+
+
+
+
+
+
+
 	exit(EXIT_SUCCESS);
 }
