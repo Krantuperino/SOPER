@@ -61,12 +61,12 @@ int main(int argc, char *argv[]) {
 	else
 	{
 		/*Esperamos al hijo*/
-		wait(NULL);
-
+		
 		/*1*/
 		close(fd_1[1]);
 
 		read(fd_1[0], &padre, sizeof(int));
+		
 		
 		/*Ahora ya tenemos el numero almacenado donde el padre*/
 		/*2*/
@@ -81,9 +81,11 @@ int main(int argc, char *argv[]) {
 		{
 			 /*Enviamos el numero*/
 			close(fd_2[0]);
+			
+			printf("Recibido %d, Enviando\n", padre);
+			
 			write(fd_2[1], (int*)&padre, sizeof(int));
 			wait(NULL);
-			exit(EXIT_SUCCESS);
 		}
 		else
 		{
@@ -91,25 +93,13 @@ int main(int argc, char *argv[]) {
 			close(fd_2[1]);
 
 			read(fd_2[0], &hijo_final, sizeof(int));
+
 			
 			printf("El valor del numero aleatorio es: %d\n",hijo_final);
 			exit(EXIT_SUCCESS);
 		}
 
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	exit(EXIT_SUCCESS);
 }

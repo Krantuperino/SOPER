@@ -30,10 +30,8 @@ int main(void)
 			printf("PADRE %lld\n", (long long int)getpid());
 		}
 	}
-
-    for(i = 0; i < NUM_PROC; i++)
-        wait(NULL);
     
+	wait(NULL);
 	exit(EXIT_SUCCESS);
 }
 
