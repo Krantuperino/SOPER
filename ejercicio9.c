@@ -1,6 +1,10 @@
-/*
- * Ejemplo de codigo que genera un numero aleatorio
-	y lo muestra por pantalla
+/**
+ * * @brief El proceso padre crea un proceso hijo que le envia un numero aleatorio.
+ *			Luego el padre crea un segundo hijo y le envia el numero que ha recibido.
+ *
+ * * @file   ejercicio9.c
+ * * @author Pablo Sanchez() y Arturo Morcillo (arturo.morcillo@estudiante.uam.es)
+ *
  */
  #include <sys/types.h>
  #include <sys/wait.h>
@@ -23,13 +27,14 @@ int main(int argc, char *argv[]) {
 	int r;
 	int padre, hijo_final;
 
-	/*Creamos la pipe*/
+	/*Creamos la primera pipe y la comprobamos*/
 	pipe_status=pipe(fd_1);
 	if(pipe_status == -1) {
 		perror("Error creando la tuberia\n");
 		exit(EXIT_FAILURE);
 	}
 
+  /*Creamos la segunda pipe y la comprobamos*/
 	pipe_status=pipe(fd_2);
 	if(pipe_status == -1) {
 		perror("Error creando la tuberia\n");
@@ -49,27 +54,26 @@ int main(int argc, char *argv[]) {
 	else  if(pid_1 ==  0)
 	{
 		r = rand();
+    /*Primero cerramos la 0*/
 		close(fd_1[0]);
 
+    /*Luego enviamos por la uno*/
 		write(fd_1[1], (int*)&r, sizeof(int));
 		exit(EXIT_SUCCESS);
 	}
 	/*Si es el padre: */
-	/*1.- Recibimos el numero aleatorio*/
-	/*2.- Creamos otro hijo*/
-	/*3.- Le enviamos al hijo el numero aleatorio*/
+
 	else
 	{
 		/*Esperamos al hijo*/
-		
-		/*1*/
-		close(fd_1[1]);
 
+		/*Recibimos el numero aleatorio*/
+		close(fd_1[1]);
 		read(fd_1[0], &padre, sizeof(int));
-		
-		
+
+
 		/*Ahora ya tenemos el numero almacenado donde el padre*/
-		/*2*/
+		/*Creamos otro hijo*/
 
 		pid_2 = fork();
 		if (pid_2 <  0)
@@ -77,13 +81,14 @@ int main(int argc, char *argv[]) {
 			printf("Error al emplear fork para el segundo hijo\n");
 			exit (EXIT_FAILURE);
 		}
+    /*Si continuamos con el padre*/
 		else  if(pid_2 > 0)
 		{
-			 /*Enviamos el numero*/
+			 /*3.- Le enviamos al hijo el numero aleatorio*/
 			close(fd_2[0]);
-			
+
 			printf("Recibido %d, Enviando\n", padre);
-			
+
 			write(fd_2[1], (int*)&padre, sizeof(int));
 			wait(NULL);
 		}
@@ -92,9 +97,10 @@ int main(int argc, char *argv[]) {
 			/*Recibimos el numero*/
 			close(fd_2[1]);
 
+      /*Lo imprimimos*/
 			read(fd_2[0], &hijo_final, sizeof(int));
 
-			
+
 			printf("El valor del numero aleatorio es: %d\n",hijo_final);
 			exit(EXIT_SUCCESS);
 		}
