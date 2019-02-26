@@ -1,3 +1,13 @@
+/**
+ * * @brief Crea dos procesos hijo, el primero usa ls en consola para enseñar todos los
+ *          archivos por pantalla y el segundo usa cat sobre uno o varios ficheros que le
+ *          indiquen por teclado
+ *
+ * * @file   ejercicio12.c
+ * * @author Pablo Sanchez() y Arturo Morcillo (arturo.morcillo@estudiante.uam.es)
+ *
+ */
+
 /* wait and return process info */
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -50,6 +60,7 @@ void  processCat () {
 
     args[0] = "cat";
 
+    /*Lee por teclado todos los archivos, separados por ','*/
     char * filePtr = fileName;
     size_t argIndex = 1;
     for(ssize_t i = 0; i < fileRead; i++)
