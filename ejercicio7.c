@@ -4,7 +4,7 @@
  *          indiquen por teclado
  *
  * * @file   ejercicio12.c
- * * @author Pablo Sanchez() y Arturo Morcillo (arturo.morcillo@estudiante.uam.es)
+ * * @author Pablo Sanchez(pablo.sanchezredondo@estudiante.uam.es) y Arturo Morcillo (arturo.morcillo@estudiante.uam.es)
  *
  */
 

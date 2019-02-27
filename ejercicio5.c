@@ -3,7 +3,7 @@
  *			DISCLAIMER: No hace nada porque no usa pipes para enviar el cambio que ha realizado el hijo.
  *
  * * @file   ejercicio12.c
- * * @author Pablo Sanchez() y Arturo Morcillo (arturo.morcillo@estudiante.uam.es)
+ * * @author Pablo Sanchez(pablo.sanchezredondo@estudiante.uam.es) y Arturo Morcillo (arturo.morcillo@estudiante.uam.es)
  *
  */
 

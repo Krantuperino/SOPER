@@ -3,7 +3,7 @@
  *			Luego el padre crea un segundo hijo y le envia el numero que ha recibido.
  *
  * * @file   ejercicio9.c
- * * @author Pablo Sanchez() y Arturo Morcillo (arturo.morcillo@estudiante.uam.es)
+ * * @author Pablo Sanchez(pablo.sanchezredondo@estudiante.uam.es) y Arturo Morcillo (arturo.morcillo@estudiante.uam.es)
  *
  */
  #include <sys/types.h>
