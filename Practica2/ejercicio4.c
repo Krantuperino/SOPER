@@ -22,7 +22,7 @@ void manejador_SIGUSR2(int sig) {
 int main(void) {
     struct sigaction act;
 	pid_t pid, pidarr[N_PROC], pidfather1, pidfather2;
-	int i, count = 0;
+	int i;
 
     sigemptyset(&(act.sa_mask));
     act.sa_flags = 0;
@@ -53,7 +53,8 @@ int main(void) {
 			pidarr[i] = fork();
 
 			if(pidarr[i] < 0){
-				printf("Error at fork");
+				printf("Error at fork\n");
+				fflush(stdout);
 				exit(EXIT_FAILURE);
 			}
 			else if(pidarr[i] == 0){
@@ -62,7 +63,6 @@ int main(void) {
 			}
 			else if(pidarr[i] > 0){
 				pause();
-				count++;
 			}
 		}
 
@@ -71,6 +71,8 @@ int main(void) {
 	}
 	else if(pid > 0){
 		/*kill(0, ...) Envia a todos los procesos*/
+		pause();
+		signal(SIGUSR1, SIG_IGN);
 		kill(0, SIGUSR1);
 		wait(NULL);
 	}
