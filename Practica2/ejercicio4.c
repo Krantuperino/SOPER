@@ -5,18 +5,21 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 
-#define N_PROC 3 
+#define N_PROC 5
+
+int count = 0;
 
 /* manejador_SIGUSR1: Avisa de que ha recibido la señal y termina. */
 void manejador_SIGUSR1(int sig) {
-	printf("Capturada la señal SIGUSR1 :)\n");
+	printf("Capturada la señal SIGUSR1. Hijo %d\n", count + 1);
 	fflush(stdout);
 	exit(EXIT_SUCCESS);
 }
 
 void manejador_SIGUSR2(int sig) {
-	printf("Recieved SIGUSR2\n");
+	printf("Hijo preparado\n");
 	fflush(stdout);
+	count++;
 }
 
 int main(void) {
@@ -31,13 +34,13 @@ int main(void) {
     act.sa_handler = manejador_SIGUSR1;
     if (sigaction(SIGUSR1, &act, NULL) < 0) {
         perror("sigaction");
-        exit(EXIT_FAILURE);
+        return EXIT_FAILURE;
     }
 
 	act.sa_handler = manejador_SIGUSR2;
     if (sigaction(SIGUSR2, &act, NULL) < 0) {
         perror("sigaction");
-        exit(EXIT_FAILURE);
+        return EXIT_FAILURE;
     }
 
 	pidfather1 = getpid();
@@ -67,7 +70,9 @@ int main(void) {
 		}
 
 		kill(pidfather1, SIGUSR2);
-		pause();
+		signal(SIGUSR1, SIG_IGN);
+		for(i = 0; i < N_PROC; i++)
+			wait(NULL);
 	}
 	else if(pid > 0){
 		/*kill(0, ...) Envia a todos los procesos*/
