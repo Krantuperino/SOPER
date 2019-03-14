@@ -9,15 +9,20 @@
 
 /* manejador_SIGUSR1: Avisa de que ha recibido la señal y termina. */
 void manejador_SIGUSR1(int sig) {
-    printf("Capturada la señal SIGUSR1 :)");
-    fflush(stdout);
+	printf("Capturada la señal SIGUSR1 :)\n");
+	fflush(stdout);
 	exit(EXIT_SUCCESS);
+}
+
+void manejador_SIGUSR2(int sig) {
+	printf("Recieved SIGUSR2\n");
+	fflush(stdout);
 }
 
 int main(void) {
     struct sigaction act;
 	pid_t pid, pidarr[N_PROC], pidfather1, pidfather2;
-	int i;
+	int i, count = 0;
 
     sigemptyset(&(act.sa_mask));
     act.sa_flags = 0;
@@ -29,13 +34,18 @@ int main(void) {
         exit(EXIT_FAILURE);
     }
 
+	act.sa_handler = manejador_SIGUSR2;
+    if (sigaction(SIGUSR2, &act, NULL) < 0) {
+        perror("sigaction");
+        exit(EXIT_FAILURE);
+    }
+
 	pidfather1 = getpid();
 	pid = fork();
 	if(pid < 0){
 		printf("Error when forking\n");
 		exit(EXIT_FAILURE);
 	}
-	/*Its a boi!*/
 	else if(pid == 0){
 		for(i = 0; i < N_PROC; i++){
 
@@ -52,18 +62,14 @@ int main(void) {
 			}
 			else if(pidarr[i] > 0){
 				pause();
+				count++;
 			}
 		}
 
 		kill(pidfather1, SIGUSR2);
 		pause();
-		for(i = 0; i < N_PROC; i++){
-			wait(NULL);
-		}
 	}
-	/*Proud father*/
 	else if(pid > 0){
-		pause();
 		/*kill(0, ...) Envia a todos los procesos*/
 		kill(0, SIGUSR1);
 		wait(NULL);
