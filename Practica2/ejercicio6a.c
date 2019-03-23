@@ -25,12 +25,16 @@ int main(void) {
 
   /*aqui estaran las señales que quiero bloquear
     cuando se empiece a contar*/
-  sigset_t set, oset;
+  sigset_t set1, set2, oset;
 
-  sigemptyset(&set);
-  sigaddset(&set, SIGUSR1);
-  sigaddset(&set, SIGUSR2);
-  sigaddset(&set, SIGALRM);
+  sigemptyset(&set1);
+  sigaddset(&set1, SIGUSR1);
+  sigaddset(&set1, SIGUSR2);
+  sigaddset(&set1, SIGALRM);
+
+  sigemptyset(&set2);
+  sigaddset(&set2, SIGUSR1);
+  sigaddset(&set2, SIGALRM);
 
   /*Ahora set tiene las funciones que quiero bloquear*/
 
@@ -61,7 +65,7 @@ int main(void) {
 
     while(1){
       /*Antes de que cuente bloqueamos las señales*/
-      if(sigprocmask(SIG_BLOCK, &set, &oset) < 0){
+      if(sigprocmask(SIG_BLOCK, &set1, &oset) < 0){
         printf("Error al bloquear las señales");
         exit(EXIT_FAILURE);
       }
@@ -75,8 +79,8 @@ int main(void) {
       }
 
       /*desbloqueamos las señales antes de la
-        espera de 3 segundos*/
-        if(sigprocmask(SIG_UNBLOCK, &set, &oset) < 0){
+        espera de 3 segundos, pero sin SIGUSR1*/
+        if(sigprocmask(SIG_UNBLOCK, &set2, &oset) < 0){
           printf("Error al desbloquear las señales");
           exit(EXIT_FAILURE);
         }

@@ -12,7 +12,7 @@
 
 
 /* manejador_SIGALRM: saca un mensaje por pantalla y termina el proceso. */
-void manejador_SIGALRM(int sig) {
+void manejador_SIGTERM(int sig) {
     printf("Soy %lld he recibido la señal SIGTERM\n",(long long int)getpid());
     exit(EXIT_SUCCESS);
 }
@@ -48,8 +48,8 @@ int main(void) {
     act.sa_flags = 0;
 
     /* Se arma el manejador de señal de SIGALRM. */
-    act.sa_handler = manejador_SIGALRM;
-    if (sigaction(SIGALRM, &act, NULL) < 0) {
+    act.sa_handler = manejador_SIGTERM;
+    if (sigaction(SIGTERM, &act, NULL) < 0) {
         perror("sigaction");
         exit(EXIT_FAILURE);
     }
@@ -83,7 +83,7 @@ int main(void) {
   if(pid > 0){ /*Padre*/
     /*Espera lo 40 segundos*/
     sleep(SECS);
-    kill(pid, SIGALRM);
+    kill(pid, SIGTERM);
     wait(0);
 
     exit(EXIT_SUCCESS);
