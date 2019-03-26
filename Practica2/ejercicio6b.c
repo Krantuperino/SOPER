@@ -57,25 +57,27 @@ int main(void) {
             exit(EXIT_FAILURE);
         }
 
-        /*Con el manejador montado podemos empezar a contar*/   while(1){      /*No queremos que el hijo reciba SIGTERM mientras cuenta*/
-        if(sigprocmask(SIG_BLOCK, &set, &oset) < 0){
-            printf("Error al bloquear las señales");
-            exit(EXIT_FAILURE);
-        }
-
-        /*Comenzamos a contar*/
-        for(counter = 0; counter<N_ITER; counter++){
-            printf("%d\n",counter);
-            sleep(1);
-        }   
-        
-        /*desbloqueamos las señal SIGTERM antes de la espera de 3 segs*/
-        if(sigprocmask(SIG_UNBLOCK, &set, &oset) < 0){
-            printf("Error al desbloquear las señales");
-            exit(EXIT_FAILURE);
-        }
-        sleep(3);
-    }   
+        /*Con el manejador montado podemos empezar a contar*/   
+        while(1){      /*No queremos que el hijo reciba SIGTERM mientras cuenta*/
+            if(sigprocmask(SIG_BLOCK, &set, &oset) < 0){
+                printf("Error al bloquear las señales");
+                exit(EXIT_FAILURE);
+            }
+    
+            /*Comenzamos a contar*/
+            for(counter = 0; counter<N_ITER; counter++){
+                printf("%d\n",counter);
+                sleep(1);
+            }   
+            
+            /*desbloqueamos las señal SIGTERM antes de la espera de 3 segs*/
+            if(sigprocmask(SIG_UNBLOCK, &set, &oset) < 0){
+                printf("Error al desbloquear las señales");
+                exit(EXIT_FAILURE);
+            }
+            sleep(3);
+            }
+    }
 
     if(pid > 0){ //Padre
     
@@ -107,5 +109,7 @@ int main(void) {
     printf("El proceso hijo <%lld> ha recibido la señal sigterm y ha terminado. Ahora yo <%lld> terminare\n",(long long int)pid,(long long int)getpid());
     exit(EXIT_SUCCESS);
     }
+
+
 
 }
