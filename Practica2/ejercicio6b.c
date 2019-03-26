@@ -79,33 +79,33 @@ int main(void) {
 
     if(pid > 0){ //Padre
     
-    /*Hacemos todo lo relativo a la alarma, ya que hemos creado ya al proceso hijo*/
-    sigemptyset(&(act.sa_mask));
-    act.sa_flags = 0;
-
-    /* Se arma la señal SIGALRM. */
-    act.sa_handler = manejador_SIGALRM;
-    if (sigaction(SIGALRM, &act, NULL) < 0) {
-        perror("sigaction");
-        exit(EXIT_FAILURE);
-    }
-
-    /*Montamos la alarma para el tiempo especificado*/
-    if (alarm(SECS))
-        fprintf(stderr, "Existe una alarma previa establecida\n");
-
-    /*Esperamos a SIGALRM de forma especifica*/
-    sigprocmask (SIG_BLOCK, &set2, &oset);
-    sigsuspend(&oset);
+        /*Hacemos todo lo relativo a la alarma, ya que hemos creado ya al proceso hijo*/
+        sigemptyset(&(act.sa_mask));
+        act.sa_flags = 0;
     
-    /*SIGTERM al hijo*/
-    kill(pid,SIGTERM);
-    printf("Le he enviado la señal SIGTERM a mi hijo con pid <%lld>\n",(long long int)pid);
+        /* Se arma la señal SIGALRM. */
+        act.sa_handler = manejador_SIGALRM;
+        if (sigaction(SIGALRM, &act, NULL) < 0) {
+            perror("sigaction");
+            exit(EXIT_FAILURE);
+        }
     
-    /*Esperamos al hijo*/
-    wait(0);
-    printf("El proceso hijo <%lld> ha recibido la señal sigterm y ha terminado. Ahora yo <%lld> terminare\n",(long long int)pid,(long long int)getpid());
-    exit(EXIT_SUCCESS);
+        /*Montamos la alarma para el tiempo especificado*/
+        if (alarm(SECS))
+            fprintf(stderr, "Existe una alarma previa establecida\n");
+    
+        /*Esperamos a SIGALRM de forma especifica*/
+        sigprocmask (SIG_BLOCK, &set2, &oset);
+        sigsuspend(&oset);
+        
+        /*SIGTERM al hijo*/
+        kill(pid,SIGTERM);
+        printf("Le he enviado la señal SIGTERM a mi hijo con pid <%lld>\n",(long long int)pid);
+        
+        /*Esperamos al hijo*/
+        wait(0);
+        printf("El proceso hijo <%lld> ha recibido la señal sigterm y ha terminado. Ahora yo <%lld> terminare\n",(long long int)pid,(long long int)getpid());
+        exit(EXIT_SUCCESS);
     }
-
+    }
 }

@@ -19,7 +19,7 @@ int main(void) {
 
     if (sigaction(SIGKILL, &act, NULL) < 0) {
         perror("sigaction");
-        exit(EXIT_FAILURE);
+        return -1;
     }
 
     while(1) {
