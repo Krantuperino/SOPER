@@ -35,7 +35,14 @@ int main(int argc, char **argv) {
 	attributes.mq_flags = 0;
 	attributes.mq_maxmsg = 10;
 	attributes.mq_curmsgs = 0;
-	attributes.mq_msgsize = 6;
+	attributes.mq_msgsize = sizeof(Mensaje);
+
+
+	/*Comprobamos los argumentos*/
+    if(argc < 2){
+        printf("ERROR. Los argumentos a recibir deben ser el nombre del fichero y el nombre de la cola\n");
+        return(EXIT_FAILURE);
+    }
 
 	queue_recieve = mq_open(argv[1],
 		O_CREAT | O_RDONLY, /* This process is only going to send messages */
@@ -58,15 +65,17 @@ int main(int argc, char **argv) {
 		return EXIT_FAILURE;
 	}
 
-
-	while((mq_receive(queue_recieve, (char *)&msg, sizeof(msg), NULL)) != -1 && strcmp(x,"FIN") != 0){
-
+	
+	while((mq_receive(queue_recieve, (char *)&msg, sizeof(msg), NULL)) != -1 && strcmp(msg.aviso,"FIN") != 0){
+		cambiar(msg.aviso);
 		if(mq_send(queue_send, (char *)&msg, sizeof(msg), 1) == -1){
 			printf("Error sending to the new queue\n");
-			
 		}
     }
 
+	if(mq_send(queue_send, (char *)&msg, sizeof(msg), 1) == -1){
+			printf("Error sending FIN\n");
+		}
 	getchar();
 	mq_close(queue_send);
 	mq_unlink(argv[2]);	

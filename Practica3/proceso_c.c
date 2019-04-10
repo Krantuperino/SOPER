@@ -9,17 +9,22 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
+
+typedef struct { 
+	char aviso[80];
+} Mensaje;
 
 int main(int argc, char **argv) {
-
+	sleep(2);
 	struct mq_attr attributes;
 	mqd_t queue_recieve;
-    char x[2000];
+	Mensaje msg;
 
 	attributes.mq_flags = 0;
 	attributes.mq_maxmsg = 10;
 	attributes.mq_curmsgs = 0;
-	attributes.mq_msgsize = 6;
+	attributes.mq_msgsize = sizeof(Mensaje);
 
 	queue_recieve = mq_open(argv[1],
 		O_CREAT | O_RDONLY, /* This process is only going to read messages */
@@ -31,13 +36,13 @@ int main(int argc, char **argv) {
 		return EXIT_FAILURE;
 	}
 
-
-	while((mq_receive(queue_recieve, (char *)&x, sizeof(x), NULL)) != -1 && strcmp(x,"FIN") != 0){
-        fflush(stdout);
-		printf("%s", x);
+	printf("IOKSE\n");
+	while((mq_receive(queue_recieve, (char *)&msg, sizeof(msg), NULL)) != -1 && strcmp(msg.aviso,"FIN") != 0){
+        
+		printf("PROCESO C:%s\n", msg.aviso);
     }
-			
-	printf("\n");
+	
 	mq_close(queue_recieve);
+	mq_unlink(argv[1]);
 	return EXIT_SUCCESS;
 }

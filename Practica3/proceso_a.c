@@ -30,7 +30,7 @@ int main(int argc, char **argv) {
 	const char s[2] = " ";
 
 	
-
+    
 
     /*Comprobamos los argumentos*/
     if(argc < 2){
@@ -68,7 +68,6 @@ int main(int argc, char **argv) {
     strcpy(x,f);
     token = strtok(x, s);
 
-    
     while( token != NULL ) {
         strcpy(msg.aviso,token);
         if(mq_send(queue, (char *)&msg, sizeof(msg), 1) == -1) {
@@ -81,7 +80,6 @@ int main(int argc, char **argv) {
     /* Wait for input to end the program */
 
     getchar();
-
 	mq_close(queue);
 	mq_unlink(argv[2]);
 	return EXIT_SUCCESS;
