@@ -7,7 +7,7 @@ NC=\e[0m
 
 
 
-all: queue.o ejercicio3_productor ejercicio3_consumidor
+all: queue.o ejercicio3_productor ejercicio3_consumidor ejercicio3_consumidor_b ejercicio3_productor_b
 
 queue.o: queue.c queue.h
 	$(CPP) $(CFLAGS) -c queue.c
@@ -34,4 +34,4 @@ ejercicio3_consumidor_b.o: ejercicio3_consumidor_b.c queue.h
 
 clean:
 	rm -f ejercicio3_consumidor ejercicio3_productor ejercicio3_consumidor.o ejercicio3_productor.o queue.o
-
+	rm -f /dev/shm/sem.sem_*

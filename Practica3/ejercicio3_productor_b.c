@@ -21,7 +21,7 @@
 #define SEM_C "/sem_c"
 #define SEM_Q "/sem_q"
 #define SEM_SHM "/sem_shm"
-#define SHM_QUEUE "/shm_queue"
+#define QUEUE "queue.txt"
 
 int main(void) {
 
@@ -35,8 +35,8 @@ int main(void) {
 	queue *example_queue;
 
     /* Creamos l memoria compartida */
-	fd_shm = shm_open(SHM_QUEUE,
-		O_RDWR | O_CREAT | O_EXCL, /* Create it and open for reading and writing */ 
+	fd_shm = open(QUEUE,
+		O_CREAT | O_RDWR | O_EXCL, /* Create it and open for reading and writing */ 
 		S_IRUSR | S_IWUSR); /* The current user can read and write */
 
 	/*Control de errores*/
@@ -44,37 +44,35 @@ int main(void) {
 		fprintf (stderr, "Error creating the shared memory segment \n");
 		return EXIT_FAILURE;
 	}
-
-    /* Redimensionamos la memoria para el tamaño de nuestra cola */
+    
 	error = ftruncate(fd_shm, sizeof(queue));
 	/*Control de errores*/
 	if(error == -1) {
 		fprintf (stderr, "Error resizing the shared memory segment \n");
-		shm_unlink(SHM_QUEUE);
+		unlink(QUEUE);
 		return EXIT_FAILURE;
 	}
-    
+
 	/* Mapeamos la cola */
 	example_queue = (queue *)mmap(NULL, sizeof(*example_queue), PROT_READ | PROT_WRITE, MAP_SHARED, fd_shm, 0);
 
 	/*Control de errores*/
 	if(example_queue == MAP_FAILED) {
 		fprintf (stderr, "Error mapping the shared memory segment \n");
-		shm_unlink(SHM_QUEUE);
 		return EXIT_FAILURE;
 	}
 
 	/*Creamos el semaforo principal*/
 	if((sem_p = sem_open(SEM_P, O_CREAT | O_EXCL, S_IRUSR | S_IWUSR, 1))== SEM_FAILED){
 		perror("sem_open");
-		shm_unlink(SHM_QUEUE);
+		unlink(QUEUE);
 		return(EXIT_FAILURE);
 	}
 
 	/*Creamos el semaforo principal*/
 	if((sem_c = sem_open(SEM_C, O_CREAT | O_EXCL, S_IRUSR | S_IWUSR, 0))== SEM_FAILED){
 		perror("sem_open");
-		shm_unlink(SHM_QUEUE);
+		unlink(QUEUE);
 		sem_close(sem_p);
 		return(EXIT_FAILURE);
 	}
@@ -82,7 +80,7 @@ int main(void) {
 	/*Creamos el semaforo para la cola*/
 	if((sem_q = sem_open(SEM_Q, O_CREAT | O_EXCL, S_IRUSR | S_IWUSR, 1))== SEM_FAILED){
 		perror("sem_open");
-		shm_unlink(SHM_QUEUE);
+		unlink(QUEUE);
 		sem_close(sem_c);
 		sem_close(sem_p);
 		sem_unlink(SEM_P);
@@ -93,7 +91,7 @@ int main(void) {
 	/*Creamos el semaforo para la memoria compartida*/
 	if((sem_shm = sem_open(SEM_SHM, O_CREAT | O_EXCL, S_IRUSR | S_IWUSR, 0))== SEM_FAILED){
 		perror("sem_open");
-		shm_unlink(SHM_QUEUE);
+		unlink(QUEUE);
 		sem_close(sem_c);
 		sem_close(sem_q);
 		sem_close(sem_p);
@@ -125,7 +123,7 @@ int main(void) {
 
 			/* Liberamos la memoria compartida */
 			munmap(example_queue, sizeof(*example_queue));
-			shm_unlink(SHM_QUEUE);
+			unlink(QUEUE);
 			sem_close(sem_p);
 			sem_unlink(SEM_P);
 			sem_close(sem_c);
@@ -154,13 +152,16 @@ int main(void) {
 
 	/* Liberamos la memoria compartida */
 	munmap(example_queue, sizeof(*example_queue));
-	shm_unlink(SHM_QUEUE);
+	close(fd_shm);
+	unlink(QUEUE);
 	sem_close(sem_p);
 	sem_unlink(SEM_P);
 	sem_close(sem_c);
 	sem_unlink(SEM_C);
 	sem_close(sem_q);
 	sem_unlink(SEM_Q);
+	sem_close(sem_shm);
+	sem_unlink(SEM_SHM);
 
 	return EXIT_SUCCESS;
 }
