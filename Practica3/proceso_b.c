@@ -29,7 +29,6 @@ int main(int argc, char **argv) {
 
 	struct mq_attr attributes;
 	mqd_t queue_recieve, queue_send;
-    char x[2000];
 	Mensaje msg;
 
 	attributes.mq_flags = 0;
@@ -54,7 +53,6 @@ int main(int argc, char **argv) {
 		return EXIT_FAILURE;
 	}
 
-	attributes.mq_msgsize = sizeof(char) * 2000;
 	queue_send = mq_open(argv[2],
 		O_CREAT | O_WRONLY, /* This process is only going to send messages */
 		S_IRUSR | S_IWUSR, /* The user can read and write */
@@ -77,6 +75,7 @@ int main(int argc, char **argv) {
 			printf("Error sending FIN\n");
 		}
 	getchar();
+	mq_close(queue_recieve);
 	mq_close(queue_send);
 	mq_unlink(argv[2]);	
 	return EXIT_SUCCESS;

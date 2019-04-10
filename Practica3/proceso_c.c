@@ -36,12 +36,14 @@ int main(int argc, char **argv) {
 		return EXIT_FAILURE;
 	}
 
-	printf("IOKSE\n");
+	printf("COMIENZO\n");
 	while((mq_receive(queue_recieve, (char *)&msg, sizeof(msg), NULL)) != -1 && strcmp(msg.aviso,"FIN") != 0){
-        
+        fflush(stdout);
 		printf("PROCESO C:%s\n", msg.aviso);
     }
 	
+	printf("DONE\n");
+
 	mq_close(queue_recieve);
 	mq_unlink(argv[1]);
 	return EXIT_SUCCESS;
