@@ -22,22 +22,23 @@ void cambiar(char* s){
     }
 }
 
-
+typedef struct { 
+	char aviso[80];
+} Mensaje;
 int main(int argc, char **argv) {
 
 	struct mq_attr attributes;
 	mqd_t queue_recieve, queue_send;
     char x[2000];
+	Mensaje msg;
 
 	attributes.mq_flags = 0;
 	attributes.mq_maxmsg = 10;
 	attributes.mq_curmsgs = 0;
 	attributes.mq_msgsize = 6;
 
-    printf("%s\n",argv[1]);
-
 	queue_recieve = mq_open(argv[1],
-		O_RDONLY, /* This process is only going to send messages */
+		O_CREAT | O_RDONLY, /* This process is only going to send messages */
 		S_IRUSR | S_IWUSR, /* The user can read and write */
 		&attributes); 
 
@@ -58,11 +59,11 @@ int main(int argc, char **argv) {
 	}
 
 
-	while((mq_receive(queue_recieve, (char *)&x, sizeof(x), NULL)) != -1 && strcmp(x,"FIN") != 0){
-        cambiar(x);
-		if(mq_send(queue_send, (char *)&x, sizeof(x), 1) == -1){
+	while((mq_receive(queue_recieve, (char *)&msg, sizeof(msg), NULL)) != -1 && strcmp(x,"FIN") != 0){
+
+		if(mq_send(queue_send, (char *)&msg, sizeof(msg), 1) == -1){
 			printf("Error sending to the new queue\n");
-			return -1;
+			
 		}
     }
 

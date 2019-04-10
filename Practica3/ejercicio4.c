@@ -18,6 +18,7 @@ int main(){
 		return 0;
 	}
 
+	pid = fork();
 	if(pid < 0){
 		printf("Error creating process B\n");
 		return -1;
@@ -27,6 +28,7 @@ int main(){
 		return 0;
 	}
 
+	pid = fork();
 	if(pid < 0){
 		printf("Error creating process C\n");
 		return -1;

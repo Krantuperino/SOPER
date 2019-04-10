@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/mman.h>
+#include <unistd.h>
 
 
 
@@ -71,15 +72,15 @@ int main(int argc, char **argv) {
     while( token != NULL ) {
         strcpy(msg.aviso,token);
         if(mq_send(queue, (char *)&msg, sizeof(msg), 1) == -1) {
-            fprintf (stderr, "Error sending message\n");
-	        
+            fprintf (stderr, "Error sending message\n");      
 	    }
         token = strtok(NULL, s);      
    }
 
       
-     /* Wait for input to end the program */
-	getchar(); 
+    /* Wait for input to end the program */
+
+    getchar();
 
 	mq_close(queue);
 	mq_unlink(argv[2]);

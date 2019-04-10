@@ -21,10 +21,8 @@ int main(int argc, char **argv) {
 	attributes.mq_curmsgs = 0;
 	attributes.mq_msgsize = 6;
 
-    printf("%s\n",argv[1]);
-
 	queue_recieve = mq_open(argv[1],
-		O_RDONLY, /* This process is only going to read messages */
+		O_CREAT | O_RDONLY, /* This process is only going to read messages */
 		S_IRUSR | S_IWUSR, /* The user can read and write */
 		&attributes); 
 
@@ -40,5 +38,6 @@ int main(int argc, char **argv) {
     }
 			
 	printf("\n");
+	mq_close(queue_recieve);
 	return EXIT_SUCCESS;
 }
