@@ -31,16 +31,20 @@ int main(int argc, char const *argv[])
 	int input;
 	ClientInfo *ci = NULL;
 	pid_t pid;
-	char *print, client_name;
 	int wait_time;
 	struct sigaction act;
 
-	if(argc < 2 || input < 0){
+	if(argc < 2){
 		printf("You need to provide a valid number as an input\n");
 		return -1;
 	}
 
 	input = atoi(argv[1]);
+	if(input < 0){
+		printf("You need to provide a valid number as an input\n");
+		return -1;
+	}
+
 
 	sigemptyset(&(act.sa_mask));
     act.sa_flags = 0;

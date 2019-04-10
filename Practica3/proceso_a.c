@@ -57,7 +57,7 @@ int main(int argc, char **argv) {
 				&attributes); 
 
 	if(queue == (mqd_t)-1) {
-		fprintf (stderr, "Error opening the queue\n"); 
+		fprintf (stderr, "Error opening the queue A\n"); 
 		return EXIT_FAILURE;
 	}
 
