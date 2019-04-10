@@ -1,8 +1,8 @@
 /**
- * @file
+ * Productor por memoria compartida
  *
- * @brief Código de ejemplo de memoria compartida, para un proceso que crea
- * la memoria.
+ * Pablo Sanchez(pablo.sanchezredondo@estudiante.uam.es) y Arturo Morcillo (arturo.morcillo@estudiante.uam.es)
+ *
  */
  
 #include <stdio.h>

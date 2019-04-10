@@ -1,3 +1,10 @@
+/**
+ * Manejador de procesos A B y C
+ *
+ * Pablo Sanchez(pablo.sanchezredondo@estudiante.uam.es) y Arturo Morcillo (arturo.morcillo@estudiante.uam.es)
+ *
+ */
+
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>

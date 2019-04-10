@@ -1,3 +1,11 @@
+/**
+ * Consumidor por memoria compartida
+ *
+ * Pablo Sanchez(pablo.sanchezredondo@estudiante.uam.es) y Arturo Morcillo (arturo.morcillo@estudiante.uam.es)
+ *
+ */
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/mman.h>

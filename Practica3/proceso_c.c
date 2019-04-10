@@ -1,8 +1,10 @@
 /**
- * @file
+ * Proceso C: Lee los mensajes de B y los imprime por pantalla
  *
- * @brief Código de ejemplo de cola de mensajes, para un proceso receptor.
+ * Pablo Sanchez(pablo.sanchezredondo@estudiante.uam.es) y Arturo Morcillo (arturo.morcillo@estudiante.uam.es)
+ *
  */
+
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <mqueue.h>

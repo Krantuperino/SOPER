@@ -1,3 +1,11 @@
+/**
+ * Crea n hijos y pide n nombres de cliente y los va imprimiendo
+ *
+ * Pablo Sanchez(pablo.sanchezredondo@estudiante.uam.es) y Arturo Morcillo (arturo.morcillo@estudiante.uam.es)
+ *
+ */
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/mman.h>

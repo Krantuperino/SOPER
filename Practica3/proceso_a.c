@@ -1,8 +1,10 @@
 /**
- * @file
+ * Proceso A, lee un fichero y envia palabra por aplabra con una cadena de mensajes al proceso B 
  *
- * @brief Código de ejemplo de cola de mensajes, para un proceso emisor.
+ * Pablo Sanchez(pablo.sanchezredondo@estudiante.uam.es) y Arturo Morcillo (arturo.morcillo@estudiante.uam.es)
+ *
  */
+
 #include <string.h>
 #include <fcntl.h>
 #include <sys/stat.h>
