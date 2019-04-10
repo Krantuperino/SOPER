@@ -65,7 +65,6 @@ int main(int argc, char **argv) {
     f = (char *) mmap (0, 2000, PROT_READ, MAP_PRIVATE, fd, 0);
     
     strcpy(x,f);
-    printf("%s\n",x);
     token = strtok(x, s);
 
     

@@ -10,18 +10,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-void cambiar(char* s){
-    int i;
-    for(i=0;i<strlen(s);i++){
-        if(s[i] == 'z')
-            s[i] = 'a';
-        else if(s[i] == 'Z')
-            s[i] = 'A';
-        else
-            s[i]++;
-    }
-}
-
 int main(int argc, char **argv) {
 
 	struct mq_attr attributes;
@@ -36,7 +24,7 @@ int main(int argc, char **argv) {
     printf("%s\n",argv[1]);
 
 	queue_recieve = mq_open(argv[1],
-		O_CREAT | O_RDONLY, /* This process is only going to read messages */
+		O_RDONLY, /* This process is only going to read messages */
 		S_IRUSR | S_IWUSR, /* The user can read and write */
 		&attributes); 
 
@@ -47,7 +35,8 @@ int main(int argc, char **argv) {
 
 
 	while((mq_receive(queue_recieve, (char *)&x, sizeof(x), NULL)) != -1 && strcmp(x,"FIN") != 0){
-        printf("%s", x);
+        fflush(stdout);
+		printf("%s", x);
     }
 			
 	printf("\n");
