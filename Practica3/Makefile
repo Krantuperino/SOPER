@@ -5,6 +5,7 @@ LDLIBS = -lrt -pthread
 BOLD=\e[1m
 NC=\e[0m
 
+EXE = ejercicio3_consumidor ejercicio3_consumidor_b ejercicio3_productor ejercicio3_productor_b
 
 
 all: queue.o ejercicio3_productor ejercicio3_consumidor ejercicio3_consumidor_b ejercicio3_productor_b
@@ -33,5 +34,5 @@ ejercicio3_consumidor_b.o: ejercicio3_consumidor_b.c queue.h
 
 
 clean:
-	rm -f ejercicio3_consumidor ejercicio3_productor ejercicio3_consumidor.o ejercicio3_productor.o queue.o
+	rm -f $(EXE) *.o
 	rm -f /dev/shm/sem.sem_*
